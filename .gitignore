@@ -123,5 +123,5 @@ Packages
 xcuserdata
 *.xcodeproj
 
-
-# End of https://www.toptal.com/developers/gitignore/api/macos,swiftpackagemanager,swift
+# Adding API Key
+Storage.swift
