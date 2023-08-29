@@ -16,7 +16,7 @@ extension MovieTarget: BaseTargetType {
     var path: String {
         switch self {
         case .search:
-            return "search/movie"
+            return "/3/search/movie"
         }
     }
     

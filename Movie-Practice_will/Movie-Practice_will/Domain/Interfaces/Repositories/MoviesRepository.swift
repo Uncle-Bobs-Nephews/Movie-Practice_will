@@ -5,13 +5,10 @@
 //  Created by SeungMin on 2023/08/25.
 //
 
-import Foundation
+import RxSwift
 
 protocol MoviesRepository {
     @discardableResult
-    func fetchMoviesList(
-        query: MovieQuery,
-        page: Int,
-        completion: @escaping (Result<MoviesPage, Error>) -> Void
-    ) -> Cancellable?
+    func fetchMoviesList(query: MovieQuery,
+                         page: Int) -> Observable<MoviesPage>
 }

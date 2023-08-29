@@ -7,18 +7,18 @@
 
 import Foundation
 
-public struct Movie: Equatable, Identifiable {
-    public typealias Identifier = String
+struct Movie: Equatable, Identifiable {
+    typealias Identifier = String
     enum Genre {
         case adventure
         case scienceFiction
     }
-    public let id: Identifier
-    public let title: String?
-    public let originalTitle: String?
-    public let overview: String?
-    public let posterPath: String?
-    public let releaseDate: Date?
+    let id: Identifier
+    let title: String?
+    let genre: Genre?
+    let posterPath: String?
+    let overview: String?
+    let releaseDate: Date?
 }
 
 struct MoviesPage: Equatable {

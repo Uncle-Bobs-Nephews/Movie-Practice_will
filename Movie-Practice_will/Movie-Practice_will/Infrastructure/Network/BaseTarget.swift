@@ -11,8 +11,9 @@ import Moya
 protocol BaseTargetType: TargetType { }
 
 extension BaseTargetType {
+    
     var baseURL: URL {
-        return URL(string: "https://api.themoviedb.org/3/")!
+        return URL(string: "https://api.themoviedb.org")!
     }
     
     var headers: [String: String]? {

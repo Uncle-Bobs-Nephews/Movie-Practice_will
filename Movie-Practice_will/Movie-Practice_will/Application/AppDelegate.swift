@@ -10,13 +10,16 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    let appDIContainer = AppDIContainer()
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-                
-        let rootVC = MovieListViewController()
-        window?.rootViewController = rootVC
+        
+        let homeSceneDIContainer = appDIContainer.makeHomeSceneDIContainer()
+        let nav = UINavigationController(rootViewController: homeSceneDIContainer.makeHomeViewController())
+        
+        window?.rootViewController = nav
         window?.makeKeyAndVisible()
         
         return true
