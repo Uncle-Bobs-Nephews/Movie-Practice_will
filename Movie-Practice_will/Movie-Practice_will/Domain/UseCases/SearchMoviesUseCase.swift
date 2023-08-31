@@ -20,6 +20,7 @@ final class DefaultSearchMoviesUseCase: SearchMoviesUseCase {
     }
     
     func execute(requestValue: SearchMoviesUseCaseRequestValue) -> Observable<MoviesPage> {
+        print("호출!!")
         return moviesRepository.fetchMoviesList(query: requestValue.query,
                                                 page: requestValue.page)
     }

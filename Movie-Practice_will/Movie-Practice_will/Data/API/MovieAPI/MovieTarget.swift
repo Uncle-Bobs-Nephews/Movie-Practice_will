@@ -30,7 +30,8 @@ extension MovieTarget: BaseTargetType {
     var task: Moya.Task {
         switch self {
         case .search(let request):
-            return .requestParameters(parameters: request.toDictionary(), encoding: JSONEncoding.default)
+            return .requestParameters(parameters: request.toDictionary(),
+                                      encoding: URLEncoding.default)
         }
     }
 }
