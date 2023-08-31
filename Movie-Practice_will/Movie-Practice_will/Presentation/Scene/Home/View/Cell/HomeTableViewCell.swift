@@ -18,7 +18,7 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
     
     let titleLabel: UILabel = {
         let l = UILabel()
-        l.textAlignment = .center
+        l.textAlignment = .left
         l.textColor = .black
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
@@ -26,7 +26,7 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
     
     let releaseDateLabel: UILabel = {
         let l = UILabel()
-        l.textAlignment = .center
+        l.textAlignment = .left
         l.textColor = .black
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
@@ -34,7 +34,7 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
     
     let overviewLabel: UILabel = {
         let l = UILabel()
-        l.textAlignment = .center
+        l.textAlignment = .left
         l.textColor = .black
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
@@ -48,6 +48,9 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.backgroundColor = .white
+        addSubviews()
+        makeConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -70,15 +73,15 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
             
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            titleLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
             
             releaseDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
             releaseDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            releaseDateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            releaseDateLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
             
             overviewLabel.topAnchor.constraint(equalTo: releaseDateLabel.bottomAnchor, constant: 6),
             overviewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            overviewLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            overviewLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
         ])
     }
     
@@ -86,10 +89,12 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
         titleLabel.text = viewModel.title
         releaseDateLabel.text = viewModel.releaseDate
         overviewLabel.text = viewModel.overview
-        do {
-            posterImageView.image = UIImage(data: try Data(contentsOf: URL(string: viewModel.posterPath ?? "")!))
-        } catch {
-            
+        if let posterPath = viewModel.posterPath {
+            do {
+                posterImageView.image = UIImage(data: try Data(contentsOf: URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)")!))
+            } catch {
+                print("없어?")
+            }
         }
     }
 }

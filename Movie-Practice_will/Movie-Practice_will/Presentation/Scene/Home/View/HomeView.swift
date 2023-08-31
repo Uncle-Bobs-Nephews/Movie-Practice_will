@@ -30,9 +30,10 @@ final class HomeView: UIView, HomeViewable {
     
     let homeTableView: UITableView = {
         let tv = UITableView()
-        tv.backgroundColor = .orange
+        tv.backgroundColor = .white
         tv.estimatedRowHeight = HomeTableViewCell.height
         tv.rowHeight = UITableView.automaticDimension
+        tv.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         tv.register(HomeTableViewCell.self,
                     forCellReuseIdentifier: HomeTableViewCell.identifier)
         tv.translatesAutoresizingMaskIntoConstraints = false
@@ -66,8 +67,8 @@ final class HomeView: UIView, HomeViewable {
             
             homeTableView.topAnchor.constraint(equalTo: searchBarContainer.bottomAnchor),
             homeTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            homeTableView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 20),
-            homeTableView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 20),
+            homeTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            homeTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
 }

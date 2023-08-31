@@ -18,7 +18,7 @@ final class HomeViewModel: ViewModelType {
     }
     
     struct Output {
-        let moveList: Driver<MoviesPage>
+        let moveList: Driver<[Movie]>
     }
     
     private let useCase: SearchMoviesUseCase
@@ -31,9 +31,10 @@ final class HomeViewModel: ViewModelType {
         let movieList = input.searchText
             .withLatestFrom(input.searchButtonClickedTrigger) { (query, _) in
                 return self.useCase.execute(requestValue: SearchMoviesUseCaseRequestValue(query: MovieQuery(query: query ?? ""), page: 1))
-                    .debug()
-//                    .map { $0.movies }
-            }.flatMapLatest { $0.asDriver(onErrorJustReturn: .init(page: 1, totalPages: 1, movies: [])) }
+//                    .debug()
+                    .map { $0.movies }
+            }
+            .flatMap { $0.asDriver(onErrorJustReturn: []) }
         return Output(moveList: movieList)
     }
 }

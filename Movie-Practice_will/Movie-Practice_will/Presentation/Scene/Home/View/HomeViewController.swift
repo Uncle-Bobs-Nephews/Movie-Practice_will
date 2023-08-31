@@ -58,9 +58,10 @@ final class HomeViewController: UIViewController, HomeViewControllable {
         
         let output = viewModel.transform(input: input)
         output.moveList
-            .drive(homeView.homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { index, viewModel, cell in
-                print("ggg")
-                cell.bind(viewModel: HomeTableViewItemViewModel(movie: viewModel))
+            .drive(homeView.homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { index, item, cell in
+                
+                print("item - \(item)")
+                cell.bind(viewModel: HomeTableViewItemViewModel(movie: item))
             }.disposed(by: disposeBag)
     }
 }
@@ -68,7 +69,7 @@ final class HomeViewController: UIViewController, HomeViewControllable {
 extension HomeViewController: UITableViewDelegate {
     
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return  (tableView, heightForRowAt: indexPath)
-//    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
+    }
 }
