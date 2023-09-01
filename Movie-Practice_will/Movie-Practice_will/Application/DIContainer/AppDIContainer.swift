@@ -12,7 +12,8 @@ final class AppDIContainer {
     // MARK: - DIContainers of scenes
     func makeHomeSceneDIContainer() -> HomeSceneDIContainer {
         let dependencies = HomeSceneDIContainer.Dependencies(
-            network: MovieNetwork()
+            baseNetwork: MovieNetwork(),
+            imageNetwork: ImageNetwork()
         )
         return HomeSceneDIContainer(dependencies: dependencies)
     }

@@ -14,9 +14,12 @@ protocol SearchMoviesUseCase {
 final class DefaultSearchMoviesUseCase: SearchMoviesUseCase {
     
     private let moviesRepository: MoviesRepository
+    private let posterImagesRepository: PosterImagesRepository
     
-    init(moviesRepository: MoviesRepository) {
+    init(moviesRepository: MoviesRepository,
+         posterImagesRepository: PosterImagesRepository) {
         self.moviesRepository = moviesRepository
+        self.posterImagesRepository = posterImagesRepository
     }
     
     func execute(requestValue: SearchMoviesUseCaseRequestValue) -> Observable<MoviesPage> {

@@ -14,7 +14,6 @@ final class HomeViewModel: ViewModelType {
     struct Input {
         let searchButtonClickedTrigger: Driver<Void>
         let searchText: Driver<String?>
-        //        let selection: Driver<IndexPath>
     }
     
     struct Output {
@@ -28,10 +27,9 @@ final class HomeViewModel: ViewModelType {
     }
     
     func transform(input: Input) -> Output {
-        let movieList = input.searchText
-            .withLatestFrom(input.searchButtonClickedTrigger) { (query, _) in
+        let movieList = input.searchButtonClickedTrigger
+            .withLatestFrom(input.searchText) { (_, query) in
                 return self.useCase.execute(requestValue: SearchMoviesUseCaseRequestValue(query: MovieQuery(query: query ?? ""), page: 1))
-//                    .debug()
                     .map { $0.movies }
             }
             .flatMap { $0.asDriver(onErrorJustReturn: []) }

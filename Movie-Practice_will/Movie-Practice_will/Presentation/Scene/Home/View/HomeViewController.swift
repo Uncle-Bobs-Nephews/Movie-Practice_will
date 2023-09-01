@@ -9,22 +9,23 @@ import UIKit
 import RxSwift
 
 protocol HomeViewControllable: BaseViewControllable {
-
+    func setupHomeTableViewDelegate()
 }
 
 final class HomeViewController: UIViewController, HomeViewControllable {
     
-    private let viewModel: HomeViewModel
     private let homeView = HomeView()
+    private var viewModel: HomeViewModel!
+    private var posterImagesRepository: PosterImagesRepository?
     var disposeBag = DisposeBag()
     
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    static func instance(viewModel: HomeViewModel,
+                         posterImagesRepository: PosterImagesRepository) -> UIViewController {
+        let vc = HomeViewController(nibName: nil,
+                                    bundle: nil)
+        vc.viewModel = viewModel
+        vc.posterImagesRepository = posterImagesRepository
+        return vc
     }
     
     override func viewDidLoad() {
@@ -32,6 +33,7 @@ final class HomeViewController: UIViewController, HomeViewControllable {
         view.backgroundColor = .white
         addSubviews()
         makeConstraints()
+        setupHomeTableViewDelegate()
         bindViewModel()
     }
     
@@ -59,17 +61,22 @@ final class HomeViewController: UIViewController, HomeViewControllable {
         let output = viewModel.transform(input: input)
         output.moveList
             .drive(homeView.homeTableView.rx.items(cellIdentifier: HomeTableViewCell.identifier, cellType: HomeTableViewCell.self)) { index, item, cell in
-                
-                print("item - \(item)")
-                cell.bind(viewModel: HomeTableViewItemViewModel(movie: item))
+                cell.bind(viewModel: HomeTableViewItemViewModel(movie: item),
+                          posterImagesRepository: self.posterImagesRepository)
             }.disposed(by: disposeBag)
+    }
+}
+
+extension HomeViewController {
+    
+    func setupHomeTableViewDelegate() {
+        homeView.homeTableView.delegate = self
     }
 }
 
 extension HomeViewController: UITableViewDelegate {
     
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+        return UITableView.automaticDimension
     }
 }

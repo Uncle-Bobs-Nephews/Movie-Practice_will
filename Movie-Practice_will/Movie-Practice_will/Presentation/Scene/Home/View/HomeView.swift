@@ -31,8 +31,6 @@ final class HomeView: UIView, HomeViewable {
     let homeTableView: UITableView = {
         let tv = UITableView()
         tv.backgroundColor = .white
-        tv.estimatedRowHeight = HomeTableViewCell.height
-        tv.rowHeight = UITableView.automaticDimension
         tv.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         tv.register(HomeTableViewCell.self,
                     forCellReuseIdentifier: HomeTableViewCell.identifier)

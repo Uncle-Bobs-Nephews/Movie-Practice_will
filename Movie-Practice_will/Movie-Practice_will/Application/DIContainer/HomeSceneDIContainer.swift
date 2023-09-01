@@ -11,7 +11,8 @@ import SwiftUI
 final class HomeSceneDIContainer {
     
     struct Dependencies {
-        let network: MovieNetwork
+        let baseNetwork: MovieNetwork
+        let imageNetwork: ImageNetwork
     }
     
     private let dependencies: Dependencies
@@ -23,20 +24,27 @@ final class HomeSceneDIContainer {
     // MARK: - Use Cases
     func makeSearchMoviesUseCase() -> SearchMoviesUseCase {
         DefaultSearchMoviesUseCase(
-            moviesRepository: makeMoviesRepository()
+            moviesRepository: makeMoviesRepository(),
+            posterImagesRepository: makePosterImagesRepository()
         )
     }
     
     // MARK: - Repositories
     func makeMoviesRepository() -> MoviesRepository {
         DefaultMoviesRepository(
-            network: self.dependencies.network)
+            network: self.dependencies.baseNetwork)
+    }
+    
+    func makePosterImagesRepository() -> PosterImagesRepository {
+        DefaultPosterImagesRepository(
+            network: self.dependencies.imageNetwork)
     }
     
     // MARK: - Movies List
     func makeHomeViewController()
-    -> HomeViewController {
-        HomeViewController(viewModel: makeHomeViewModel())
+    -> UIViewController {
+        return HomeViewController.instance(viewModel: makeHomeViewModel(),
+                                    posterImagesRepository: makePosterImagesRepository())
     }
     
     func makeHomeViewModel()

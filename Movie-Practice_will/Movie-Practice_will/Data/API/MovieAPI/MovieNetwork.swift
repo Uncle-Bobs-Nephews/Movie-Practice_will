@@ -19,7 +19,7 @@ final class MovieNetwork: MovieNetworkable {
     
     func fetchMoviesList(query: MovieQuery, page: Int) -> Observable<MoviesPage> {
         let moviesRequest = MoviesRequest(query: query.query, page: page)
-        return provider.rx.request(.search(request: moviesRequest))
+        return provider.rx.request(.fetchMoviesList(request: moviesRequest))
             .map(MoviesResponseDTO.self)
             .compactMap { $0.toDomain() }
             .asObservable()

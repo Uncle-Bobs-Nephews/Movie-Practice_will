@@ -6,20 +6,26 @@
 //
 
 import UIKit
+import RxSwift
 
 protocol HomeTableViewCellable: BaseViewable {
-    func bind(viewModel: HomeTableViewItemViewModel)
+    func bind(viewModel: HomeTableViewItemViewModel,
+               posterImagesRepository: PosterImagesRepository?)
 }
 
 final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
     
     static let identifier = "HomeTableViewCell"
-    static let height = CGFloat(130)
+    let disposeBag = DisposeBag()
+    
+    var viewModel: HomeTableViewItemViewModel!
+    var posterImagesRepository: PosterImagesRepository?
     
     let titleLabel: UILabel = {
         let l = UILabel()
         l.textAlignment = .left
         l.textColor = .black
+        l.numberOfLines = 3
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
@@ -28,6 +34,7 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
         let l = UILabel()
         l.textAlignment = .left
         l.textColor = .black
+        l.numberOfLines = 2
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
@@ -36,6 +43,7 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
         let l = UILabel()
         l.textAlignment = .left
         l.textColor = .black
+        l.numberOfLines = 20
         l.translatesAutoresizingMaskIntoConstraints = false
         return l
     }()
@@ -69,32 +77,45 @@ final class HomeTableViewCell: UITableViewCell, HomeTableViewCellable {
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             posterImageView.widthAnchor.constraint(equalToConstant: 80),
-            posterImageView.heightAnchor.constraint(equalToConstant: 10),
+            posterImageView.heightAnchor.constraint(equalToConstant: 100),
             
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            titleLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -20),
             
             releaseDateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 6),
-            releaseDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            releaseDateLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
+            releaseDateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            releaseDateLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -20),
             
             overviewLabel.topAnchor.constraint(equalTo: releaseDateLabel.bottomAnchor, constant: 6),
-            overviewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            overviewLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -16),
+            overviewLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            overviewLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            overviewLabel.trailingAnchor.constraint(equalTo: posterImageView.leadingAnchor, constant: -20),
         ])
     }
     
-    func bind(viewModel: HomeTableViewItemViewModel) {
+    func bind(viewModel: HomeTableViewItemViewModel,
+              posterImagesRepository: PosterImagesRepository?) {
+        
+        self.viewModel = viewModel
+        self.posterImagesRepository = posterImagesRepository
+        
         titleLabel.text = viewModel.title
         releaseDateLabel.text = viewModel.releaseDate
         overviewLabel.text = viewModel.overview
-        if let posterPath = viewModel.posterPath {
-            do {
-                posterImageView.image = UIImage(data: try Data(contentsOf: URL(string: "https://image.tmdb.org/t/p/w500/\(posterPath)")!))
-            } catch {
-                print("없어?")
-            }
-        }
+        updatePosterImageView(width: 500)
+    }
+    
+    private func updatePosterImageView(width: Int) {
+        posterImageView.image = nil
+        guard let path = viewModel.posterPath else { return }
+        
+        posterImagesRepository?.fetchImage(with: path,
+                                           width: 500)
+        .asDriver(onErrorJustReturn: nil)
+        .drive(onNext: { data in
+            guard let data else { return }
+            self.posterImageView.image = UIImage(data: data)
+        }).disposed(by: disposeBag)
     }
 }

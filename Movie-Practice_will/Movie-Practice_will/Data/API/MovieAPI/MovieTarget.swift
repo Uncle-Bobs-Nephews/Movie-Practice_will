@@ -8,28 +8,28 @@
 import Moya
 
 enum MovieTarget {
-    case search(request: MoviesRequest)
+    case fetchMoviesList(request: MoviesRequest)
 }
 
 extension MovieTarget: BaseTargetType {
     
     var path: String {
         switch self {
-        case .search:
+        case .fetchMoviesList:
             return "/3/search/movie"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .search:
+        case .fetchMoviesList:
             return .get
         }
     }
     
     var task: Moya.Task {
         switch self {
-        case .search(let request):
+        case .fetchMoviesList(let request):
             return .requestParameters(parameters: request.toDictionary(),
                                       encoding: URLEncoding.default)
         }

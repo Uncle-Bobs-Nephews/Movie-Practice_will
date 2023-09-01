@@ -1,5 +1,5 @@
 //
-//  BaseTarget.swift
+//  BaseTargetType.swift
 //  Movie-Practice_will
 //
 //  Created by SeungMin on 2023/08/25.
@@ -21,17 +21,5 @@ extension BaseTargetType {
             "Content-Type": "application/json",
             "Authorization": "Bearer \(Storage.apiKey)"
         ]
-    }
-}
-
-extension Encodable {
-    func toDictionary() -> [String: Any] {
-        do {
-            let data = try JSONEncoder().encode(self)
-            let dict = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-            return dict ?? [:]
-        } catch {
-            return [:]
-        }
     }
 }
